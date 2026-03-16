@@ -1,0 +1,18 @@
+# IDE
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+.venv/
+
+# Node / Angular
+node_modules/
+dist/
+
+# DB
+*.db
