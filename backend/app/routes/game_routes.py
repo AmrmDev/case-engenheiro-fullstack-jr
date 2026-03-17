@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from database import get_db
-import models
+from app import models
 from schemas import GameOut, AttemptCreate, AttemptResult, RankingEntry
 from auth import get_current_user
 from services.game_service import start_game, submit_attempt

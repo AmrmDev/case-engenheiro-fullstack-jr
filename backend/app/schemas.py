@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import Optional
@@ -25,8 +26,9 @@ class LoginRequest(BaseModel):
 
 class Token(BaseModel):
     access_token: str
-    token_type: "bearer"
+    token_type: str = "bearer"
 
+    model_config = {"from_attributes": True}
 # game
 
 class GameOut(BaseModel):
