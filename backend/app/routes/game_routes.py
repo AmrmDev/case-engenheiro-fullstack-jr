@@ -36,3 +36,17 @@ def attempt(
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
     return result
+
+
+@router.get("/ranking/top", response_model=list[RankingEntry])
+def ranking(db: Session = Depends(get_db)):
+    users = db.query(models.User).order_by(models.User.best_score.desc()).limit(10).all()
+    result = []
+    for user in users:
+        total_games = db.query(models.Game).filter(models.Game.user_id == user.id).count()
+        result.append({
+            "username": user.username,
+            "best_score": user.best_score,
+            "total_games": total_games
+        })
+    return result
