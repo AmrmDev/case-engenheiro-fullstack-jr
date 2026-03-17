@@ -50,3 +50,18 @@ def ranking(db: Session = Depends(get_db)):
             "total_games": total_games
         })
     return result
+
+
+@router.get("/{game_id}", response_model=GameOut)
+def game_detail(
+    game_id: int,
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    game = db.query(models.Game).filter(
+        models.Game.id == game_id,
+        models.Game.user_id == current_user.id
+    ).first()
+    if not game:
+        raise HTTPException(status_code=404, detail="Partida não encontrada")
+    return game
