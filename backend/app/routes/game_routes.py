@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from backend.app.database import get_db
-from backend.app import models
-from backend.app.schemas import GameOut, AttemptCreate, AttemptResult, RankingEntry
-from backend.app.auth import get_current_user
-from backend.app.services.game_service import start_game, submit_attempt
+from database import get_db
+import models
+from schemas import GameOut, AttemptCreate, AttemptResult, RankingEntry
+from auth import get_current_user
+from services.game_service import start_game, submit_attempt
 
 router = APIRouter(prefix="/api/games", tags=["games"])
 
@@ -50,6 +50,15 @@ def ranking(db: Session = Depends(get_db)):
             "total_games": total_games
         })
     return result
+
+@router.get("/", response_model=list[GameOut])
+def history(
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    return db.query(models.Game).filter(
+        models.Game.user_id == current_user.id
+    ).order_by(models.Game.created_at.desc()).all()
 
 
 @router.get("/{game_id}", response_model=GameOut)
