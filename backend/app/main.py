@@ -3,8 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
 from app.routes import auth_routes, game_routes
 
-Base.metadata.create_all(bind=engine)
-
 app = FastAPI(
     title="Mastermind API - Case JR",
     description="API backend do jogo Mastermind - Case Eng Full-Stack JR",
