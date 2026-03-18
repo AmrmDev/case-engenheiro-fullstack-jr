@@ -25,7 +25,7 @@ def start_game(user_id: int, db: Session) -> models.Game:
         attempts_matrix="[]"
     )
 
-    db.Add(game)
+    db.add(game)
     db.commit()
     db.refresh(game)
     return game
