@@ -27,3 +27,7 @@ def test_submit_attempt(client):
     assert response.status_code == 200
     assert "exact_hits" in response.json()
 
+def test_ranking(client):
+    response = client.get("/api/games/ranking/top")
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
