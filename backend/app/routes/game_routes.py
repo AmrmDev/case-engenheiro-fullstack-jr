@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from database import get_db
+from app.database import get_db
 from app import models
-from schemas import GameOut, AttemptCreate, AttemptResult, RankingEntry
-from auth import get_current_user
-from services.game_service import start_game, submit_attempt
+from app.schemas import GameOut, AttemptCreate, AttemptResult, RankingEntry
+from app.auth import get_current_user
+from app.services.game_service import (start_game, submit_attempt)
 
 router = APIRouter(prefix="/api/games", tags=["games"])
 
