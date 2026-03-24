@@ -64,23 +64,25 @@ constructor(private gameService: GameService, private router: Router, private cd
   }
 
   startNewGame(): void {
-    this.loading = true;
-    this.gameService.startGame().subscribe({
-      next: (game) => {
-        this.gameId = game.id;
-        this.attempts = [];
-        this.currentGuess = Array(CODE_LENGTH).fill(null);
-        this.gameOver = false;
-        this.won = false;
-        this.finalScore = null;
-        this.loading = false;
-      },
-      error: () => {
-        this.error = 'Erro ao iniciar partida.';
-        this.loading = false;
-      }
-    });
-  }
+  this.loading = true;
+  this.gameService.startGame().subscribe({
+    next: (game) => {
+      this.gameId = game.id;
+      this.attempts = [];
+      this.currentGuess = Array(CODE_LENGTH).fill(null);
+      this.gameOver = false;
+      this.won = false;
+      this.finalScore = null;
+      this.loading = false;
+      this.cdr.detectChanges();
+    },
+    error: () => {
+      this.error = 'Erro ao iniciar partida.';
+      this.loading = false;
+      this.cdr.detectChanges();
+    }
+  });
+}
 
   selectColor(color: Color): void {
     this.selectedColor = color;
@@ -107,35 +109,36 @@ constructor(private gameService: GameService, private router: Router, private cd
   }
 
   submitGuess(): void {
-    if (!this.canSubmit || !this.gameId) return;
-    this.submitting = true;
-    this.error = '';
+  if (!this.canSubmit || !this.gameId) return;
+  this.submitting = true;
+  this.error = '';
 
-    const guess = this.currentGuess as Color[];
-    this.gameService.submitAttempt(this.gameId, guess).subscribe({
-      next: (result: AttemptResult) => {
-        this.attempts = [...this.attempts, {
-          guess: [...guess],
-          exact_hits: result.exact_hits,
-          attempt_number: result.attempt_number
-        }];
-        this.currentGuess = Array(CODE_LENGTH).fill(null);
-        this.submitting = false;  
-        this.cdr.detectChanges();  // <- adiciona essa linha
+  const guess = this.currentGuess as Color[];
+  this.gameService.submitAttempt(this.gameId, guess).subscribe({
+    next: (result: AttemptResult) => {
+      this.attempts = [...this.attempts, {
+        guess: [...guess],
+        exact_hits: result.exact_hits,
+        attempt_number: result.attempt_number
+      }];
+      this.currentGuess = Array(CODE_LENGTH).fill(null);
+      this.submitting = false;
 
-        if (result.game_over) {
-          this.gameOver = true;
-          this.won = result.won;
-          this.finalScore = result.score;
-          this.cdr.detectChanges();  // <- e essa também
-        }
-      },
-      error: (err) => {
-        this.error = err.error?.detail || 'Erro ao enviar tentativa.';
-        this.submitting = false;
+      if (result.game_over) {
+        this.gameOver = true;
+        this.won = result.won;
+        this.finalScore = result.score;
       }
-    });
-  }
+
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      this.error = err.error?.detail || 'Erro ao enviar tentativa.';
+      this.submitting = false;
+      this.cdr.detectChanges();
+    }
+  });
+}
 
   getHitDots(hits: number): number[] { return Array(hits).fill(0); }
   getMissDots(attempt: AttemptRow): number[] { return Array(CODE_LENGTH - attempt.exact_hits).fill(0); }

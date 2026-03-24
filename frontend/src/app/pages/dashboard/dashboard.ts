@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
@@ -20,15 +20,16 @@ export class Dashboard implements OnInit {
   loading = true;
   startingGame = false;
 
-  constructor(
-    private authService: AuthService,
-    private gameService: GameService,
-    private router: Router
-  ) {}
+constructor(
+  private authService: AuthService,
+  private gameService: GameService,
+  private router: Router,
+  private cdr: ChangeDetectorRef
+) {}
 
   ngOnInit(): void {
     this.authService.getMe().subscribe({
-      next: (user) => { this.user = user; },
+      next: (user) => { this.user = user; this.cdr.detectChanges(); },
       error: () => {}
     });
 
@@ -36,8 +37,9 @@ export class Dashboard implements OnInit {
       next: (games) => {
         this.recentGames = games.slice(0, 5);
         this.loading = false;
+        this.cdr.detectChanges();
       },
-      error: () => { this.loading = false; }
+      error: () => { this.loading = false; this.cdr.detectChanges(); }
     });
   }
 
