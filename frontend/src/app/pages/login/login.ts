@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
 
@@ -9,29 +9,31 @@ import { AuthService } from '../../services/auth';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  styleUrls: ['./login.scss']
 })
 export class LoginComponent {
   form: FormGroup;
-  errorMessage = '';
   loading = false;
+  error = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {
     this.form = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  onSubmit(): void {
-    if (this.form.invalid) return;
-    this.loading = true;
-    this.errorMessage = '';
+  get f() { return this.form.controls; }
 
-    this.authService.login(this.form.value).subscribe({
+  submit(): void {
+    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    this.loading = true;
+    this.error = '';
+
+    this.auth.login(this.form.value).subscribe({
       next: () => this.router.navigate(['/dashboard']),
-      error: () => {
-        this.errorMessage = 'Usuário ou senha inválidos.';
+      error: (err) => {
+        this.error = err.error?.detail || 'Credenciais inválidas.';
         this.loading = false;
       }
     });

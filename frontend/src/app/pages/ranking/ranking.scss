@@ -1,0 +1,89 @@
+.ranking-page {
+  min-height: calc(100vh - 64px);
+  padding: 40px 24px;
+
+  .ranking-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+}
+
+.page-header {
+  text-align: center;
+  h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+  p { color: var(--text-secondary); font-size: 0.95rem; }
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 60px;
+}
+
+.error-banner {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  color: var(--danger);
+}
+
+.ranking-table {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+
+  .table-header {
+    display: grid;
+    grid-template-columns: 56px 1fr 160px 100px;
+    padding: 12px 24px;
+    background: var(--bg-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .table-row {
+    display: grid;
+    grid-template-columns: 56px 1fr 160px 100px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    align-items: center;
+    transition: background 0.15s;
+
+    &:hover { background: var(--bg-card-hover); }
+    &.top3 { background: rgba(249,115,22,0.03); }
+
+    .rank { display: flex; align-items: center; }
+    .medal { font-size: 1.4rem; }
+    .rank-num { font-size: 0.9rem; color: var(--text-muted); }
+    .player-name { font-weight: 600; font-size: 0.95rem; }
+    .score { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+    .games { font-size: 0.85rem; color: var(--text-secondary); }
+  }
+}
+
+.empty-state {
+  background: var(--bg-card);
+  border: 1px dashed var(--border-light);
+  border-radius: var(--radius);
+  padding: 60px;
+  text-align: center;
+
+  .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+  p { color: var(--text-secondary); }
+}
+
+.spinner-lg {
+  width: 32px; height: 32px;
+  border: 3px solid var(--border-light);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}

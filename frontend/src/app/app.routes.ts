@@ -1,29 +1,29 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './guards/auth.guard';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'login',
-    loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
+    loadComponent: () => import('./pages/login/login').then(m => m.LoginComponent)
   },
   {
     path: 'register',
-    loadComponent: () => import('./pages/register/register.component').then(m => m.RegisterComponent)
+    loadComponent: () => import('./pages/register/register').then(m => m.Register)
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+    loadComponent: () => import('./pages/dashboard/dashboard').then(m => m.Dashboard),
     canActivate: [authGuard]
   },
   {
     path: 'game',
-    loadComponent: () => import('./pages/game/game.component').then(m => m.GameComponent),
+    loadComponent: () => import('./pages/game/game').then(m => m.Game),
     canActivate: [authGuard]
   },
   {
     path: 'ranking',
-    loadComponent: () => import('./pages/ranking/ranking.component').then(m => m.RankingComponent),
+    loadComponent: () => import('./pages/ranking/ranking').then(m => m.Ranking),
     canActivate: [authGuard]
   },
   { path: '**', redirectTo: 'login' }

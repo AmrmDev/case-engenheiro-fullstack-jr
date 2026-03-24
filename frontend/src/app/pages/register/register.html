@@ -1,1 +1,50 @@
-<p>register works!</p>
+<div class="auth-page">
+  <div class="auth-bg">
+    <div class="grid-overlay"></div>
+  </div>
+
+  <div class="auth-card fade-in-up">
+    <div class="auth-header">
+      <div class="auth-logo">⬡</div>
+      <h1>Criar Conta</h1>
+      <p>Junte-se ao Mastermind</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+      <div class="field" [class.error]="f['username'].invalid && f['username'].touched">
+        <label>Usuário</label>
+        <input type="text" formControlName="username" placeholder="Escolha um nome de usuário" />
+        <span class="field-error" *ngIf="f['username'].invalid && f['username'].touched">
+          Usuário obrigatório (mínimo 3 caracteres)
+        </span>
+      </div>
+
+      <div class="field" [class.error]="f['email'].invalid && f['email'].touched">
+        <label>E-mail</label>
+        <input type="email" formControlName="email" placeholder="seu@email.com" />
+        <span class="field-error" *ngIf="f['email'].invalid && f['email'].touched">
+          E-mail inválido
+        </span>
+      </div>
+
+      <div class="field" [class.error]="f['password'].invalid && f['password'].touched">
+        <label>Senha</label>
+        <input type="password" formControlName="password" placeholder="••••••••" />
+        <span class="field-error" *ngIf="f['password'].invalid && f['password'].touched">
+          Senha obrigatória (mínimo 6 caracteres)
+        </span>
+      </div>
+
+      <div class="alert-error" *ngIf="error">{{ error }}</div>
+
+      <button type="submit" class="btn-primary" [disabled]="loading">
+        <span *ngIf="!loading">Criar Conta</span>
+        <span *ngIf="loading" class="spinner"></span>
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Já tem conta? <a routerLink="/login">Entrar</a>
+    </p>
+  </div>
+</div>

@@ -1,1 +1,70 @@
-<p>dashboard works!</p>
+<app-header></app-header>
+
+<div class="dashboard">
+  <div class="dashboard-inner">
+
+    <div class="hero fade-in-up">
+      <div class="hero-text">
+        <h1>Olá, <span class="accent">{{ user?.username || '...' }}</span> 👋</h1>
+        <p>Pronto para desafiar sua mente? Adivinhe a combinação secreta de 4 cores em até 10 tentativas.</p>
+      </div>
+      <div class="hero-actions">
+        <button class="btn-play" (click)="startNewGame()" [disabled]="startingGame">
+          <span *ngIf="!startingGame">▶ Nova Partida</span>
+          <span *ngIf="startingGame" class="spinner-sm"></span>
+        </button>
+        <a routerLink="/ranking" class="btn-secondary">🏆 Ranking</a>
+      </div>
+    </div>
+
+    <div class="stats-grid fade-in-up" *ngIf="user">
+      <div class="stat-card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-value">{{ user.best_score ?? '—' }}</div>
+        <div class="stat-label">Melhor Pontuação</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎮</div>
+        <div class="stat-value">{{ recentGames.length }}</div>
+        <div class="stat-label">Partidas Recentes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value">{{ wonCount }}</div>
+        <div class="stat-label">Vitórias</div>
+      </div>
+    </div>
+
+    <div class="section fade-in-up">
+      <h2 class="section-title">Partidas Recentes</h2>
+
+      <div class="loading-state" *ngIf="loading">
+        <div class="spinner-lg"></div>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && recentGames.length === 0">
+        <div class="empty-icon">🎲</div>
+        <p>Nenhuma partida ainda. Que tal começar agora?</p>
+        <button class="btn-play small" (click)="startNewGame()">Jogar Agora</button>
+      </div>
+
+      <div class="games-table" *ngIf="!loading && recentGames.length > 0">
+        <div class="table-header">
+          <span>Data</span>
+          <span>Resultado</span>
+          <span>Pontuação</span>
+          <span>Duração</span>
+        </div>
+        <div class="table-row" *ngFor="let game of recentGames">
+          <span class="date mono">{{ formatDate(game.created_at) }}</span>
+          <span class="badge" [class.win]="game.won" [class.loss]="!game.won">
+            {{ game.won ? '🏆 Vitória' : '💀 Derrota' }}
+          </span>
+          <span class="score mono">{{ game.score ?? '—' }}</span>
+          <span class="duration mono">{{ formatDuration(game.duration_seconds) }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

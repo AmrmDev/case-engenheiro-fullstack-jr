@@ -1,32 +1,42 @@
-<div class="login-container">
-  <div class="login-card">
-    <h1>🧠 Mastermind</h1>
-    <h2>Entrar</h2>
+<div class="auth-page">
+  <div class="auth-bg">
+    <div class="grid-overlay"></div>
+  </div>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="field">
+  <div class="auth-card fade-in-up">
+    <div class="auth-header">
+      <div class="auth-logo">⬡</div>
+      <h1>Mastermind</h1>
+      <p>Entre na sua conta para jogar</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+      <div class="field" [class.error]="f['username'].invalid && f['username'].touched">
         <label>Usuário</label>
-        <input type="text" formControlName="username" placeholder="seu usuário" />
-        <span class="error" *ngIf="form.get('username')?.touched && form.get('username')?.invalid">
-          Campo obrigatório
+        <input type="text" formControlName="username" placeholder="Seu nome de usuário" />
+        <span class="field-error" *ngIf="f['username'].invalid && f['username'].touched">
+          Usuário obrigatório (mínimo 3 caracteres)
         </span>
       </div>
 
-      <div class="field">
+      <div class="field" [class.error]="f['password'].invalid && f['password'].touched">
         <label>Senha</label>
-        <input type="password" formControlName="password" placeholder="sua senha" />
-        <span class="error" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
-          Campo obrigatório
+        <input type="password" formControlName="password" placeholder="••••••••" />
+        <span class="field-error" *ngIf="f['password'].invalid && f['password'].touched">
+          Senha obrigatória (mínimo 6 caracteres)
         </span>
       </div>
 
-      <span class="error" *ngIf="errorMessage">{{ errorMessage }}</span>
+      <div class="alert-error" *ngIf="error">{{ error }}</div>
 
-      <button type="submit" [disabled]="loading">
-        {{ loading ? 'Entrando...' : 'Entrar' }}
+      <button type="submit" class="btn-primary" [disabled]="loading">
+        <span *ngIf="!loading">Entrar</span>
+        <span *ngIf="loading" class="spinner"></span>
       </button>
     </form>
 
-    <p>Não tem conta? <a routerLink="/register">Cadastre-se</a></p>
+    <p class="auth-footer">
+      Não tem conta? <a routerLink="/register">Cadastre-se</a>
+    </p>
   </div>
 </div>

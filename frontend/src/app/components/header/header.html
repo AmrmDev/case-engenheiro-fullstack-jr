@@ -1,1 +1,19 @@
-<p>header works!</p>
+<header class="header">
+  <div class="header-inner">
+    <a routerLink="/dashboard" class="logo">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">Mastermind</span>
+    </a>
+
+    <nav class="nav">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
+      <a routerLink="/game" routerLinkActive="active" class="nav-link">Jogar</a>
+      <a routerLink="/ranking" routerLinkActive="active" class="nav-link">Ranking</a>
+    </nav>
+
+    <div class="header-right">
+      <span class="username" *ngIf="user">{{ user.username }}</span>
+      <button class="btn-logout" (click)="logout()">Sair</button>
+    </div>
+  </div>
+</header>

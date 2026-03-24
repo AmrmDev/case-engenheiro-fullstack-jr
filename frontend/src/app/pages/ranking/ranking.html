@@ -1,1 +1,42 @@
-<p>ranking works!</p>
+<app-header></app-header>
+
+<div class="ranking-page">
+  <div class="ranking-inner">
+
+    <div class="page-header fade-in-up">
+      <h1>🏆 Ranking</h1>
+      <p>Os melhores jogadores de Mastermind</p>
+    </div>
+
+    <div class="loading-state" *ngIf="loading">
+      <div class="spinner-lg"></div>
+    </div>
+
+    <div class="error-banner" *ngIf="error">{{ error }}</div>
+
+    <div class="ranking-table fade-in-up" *ngIf="!loading && entries.length > 0">
+      <div class="table-header">
+        <span>#</span>
+        <span>Jogador</span>
+        <span>Melhor Pontuação</span>
+        <span>Partidas</span>
+      </div>
+
+      <div class="table-row" *ngFor="let entry of entries; let i = index" [class.top3]="i < 3">
+        <span class="rank">
+          <span class="medal" *ngIf="i < 3">{{ getMedal(i) }}</span>
+          <span class="rank-num mono" *ngIf="i >= 3">{{ i + 1 }}</span>
+        </span>
+        <span class="player-name">{{ entry.username }}</span>
+        <span class="score mono">{{ entry.best_score }}</span>
+        <span class="games mono">{{ entry.total_games }}</span>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && entries.length === 0">
+      <div class="empty-icon">🎲</div>
+      <p>Nenhuma partida finalizada ainda. Seja o primeiro!</p>
+    </div>
+
+  </div>
+</div>

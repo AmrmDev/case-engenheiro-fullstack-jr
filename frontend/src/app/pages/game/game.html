@@ -1,1 +1,113 @@
-<p>game works!</p>
+<app-header></app-header>
+
+<div class="game-page">
+  <div class="game-inner">
+
+    <div class="loading-state" *ngIf="loading">
+      <div class="spinner-lg"></div>
+      <p>Gerando combinação secreta...</p>
+    </div>
+
+    <div class="error-banner" *ngIf="error">{{ error }}</div>
+
+    <ng-container *ngIf="!loading">
+
+      <div class="result-banner" *ngIf="gameOver" [class.win]="won" [class.loss]="!won">
+        <div class="result-icon">{{ won ? '🏆' : '💀' }}</div>
+        <div class="result-text">
+          <h2>{{ won ? 'Você Ganhou!' : 'Game Over!' }}</h2>
+          <p *ngIf="won && finalScore">Pontuação: <strong class="mono">{{ finalScore }}</strong></p>
+          <p *ngIf="!won">Não foi dessa vez. Tente novamente!</p>
+        </div>
+        <div class="result-actions">
+          <button class="btn-new-game" (click)="startNewGame()">Nova Partida</button>
+          <button class="btn-dashboard" (click)="goToDashboard()">Dashboard</button>
+        </div>
+      </div>
+
+      <div class="game-layout">
+
+        <div class="board-section">
+          <div class="board-header">
+            <h2>Tabuleiro</h2>
+            <span class="attempts-counter" [class.warning]="attemptsLeft <= 3">
+              {{ attemptsLeft }} tentativa{{ attemptsLeft !== 1 ? 's' : '' }} restante{{ attemptsLeft !== 1 ? 's' : '' }}
+            </span>
+          </div>
+
+          <div class="board">
+            <div class="attempt-row past" *ngFor="let attempt of attempts.slice().reverse(); let i = index">
+              <span class="row-num mono">{{ maxAttempts - i }}</span>
+              <div class="guess-slots">
+                <div class="slot filled" *ngFor="let c of attempt.guess" [style.background]="colorOf(c)"></div>
+              </div>
+              <div class="feedback">
+                <div class="dot hit" *ngFor="let h of getHitDots(attempt.exact_hits)"></div>
+                <div class="dot miss" *ngFor="let m of getMissDots(attempt)"></div>
+              </div>
+            </div>
+
+            <div class="attempt-row current" *ngIf="!gameOver">
+              <span class="row-num mono active">{{ attemptsLeft }}</span>
+              <div class="guess-slots">
+                <div class="slot"
+                     *ngFor="let c of currentGuess; let i = index"
+                     [class.filled]="c !== null"
+                     [class.empty]="c === null"
+                     [style.background]="colorOf(c)"
+                     (click)="placeColor(i)">
+                  <span class="slot-label" *ngIf="c === null">{{ i + 1 }}</span>
+                </div>
+              </div>
+              <div class="feedback">
+                <div class="dot placeholder" *ngFor="let s of slots"></div>
+              </div>
+            </div>
+
+            <div class="attempt-row empty" *ngFor="let r of [].constructor(attemptsLeft - (gameOver ? 0 : 1))">
+              <span class="row-num mono">—</span>
+              <div class="guess-slots">
+                <div class="slot empty" *ngFor="let s of slots"></div>
+              </div>
+              <div class="feedback">
+                <div class="dot placeholder" *ngFor="let s of slots"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls-section" *ngIf="!gameOver">
+          <div class="palette-label">Selecione uma cor:</div>
+          <div class="palette">
+            <button class="color-btn"
+                    *ngFor="let color of colors"
+                    [class.selected]="selectedColor === color"
+                    [style.background]="colorOf(color)"
+                    (click)="selectColor(color)">
+              <span class="check" *ngIf="selectedColor === color">✓</span>
+            </button>
+          </div>
+
+          <div class="current-preview">
+            <p class="preview-label">Clique nos slots para colocar a cor selecionada:</p>
+            <div class="preview-slots">
+              <div class="preview-slot"
+                   *ngFor="let c of currentGuess; let i = index"
+                   [style.background]="colorOf(c)"
+                   [class.empty]="c === null"
+                   (click)="placeColor(i)">
+                <span *ngIf="c === null">+</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-submit" [disabled]="!canSubmit" (click)="submitGuess()">
+            <span *ngIf="!submitting">Confirmar Tentativa</span>
+            <span *ngIf="submitting" class="spinner-sm"></span>
+          </button>
+        </div>
+
+      </div>
+    </ng-container>
+  </div>
+</div>
