@@ -1,1 +1,32 @@
-<p>login works!</p>
+<div class="login-container">
+  <div class="login-card">
+    <h1>🧠 Mastermind</h1>
+    <h2>Entrar</h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label>Usuário</label>
+        <input type="text" formControlName="username" placeholder="seu usuário" />
+        <span class="error" *ngIf="form.get('username')?.touched && form.get('username')?.invalid">
+          Campo obrigatório
+        </span>
+      </div>
+
+      <div class="field">
+        <label>Senha</label>
+        <input type="password" formControlName="password" placeholder="sua senha" />
+        <span class="error" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+          Campo obrigatório
+        </span>
+      </div>
+
+      <span class="error" *ngIf="errorMessage">{{ errorMessage }}</span>
+
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Entrando...' : 'Entrar' }}
+      </button>
+    </form>
+
+    <p>Não tem conta? <a routerLink="/register">Cadastre-se</a></p>
+  </div>
+</div>
